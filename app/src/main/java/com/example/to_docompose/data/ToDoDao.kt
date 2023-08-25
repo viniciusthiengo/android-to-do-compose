@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ToDoDao {
 
-    @Query(value = "SELECT * FROM $DATABASE_TABLE ORDER BY id ASK")
+    @Query(value = "SELECT * FROM $DATABASE_TABLE ORDER BY id ASC")
     fun getAllTasks(): Flow<List<ToDoTask>>
 
     @Query(value = "SELECT * FROM $DATABASE_TABLE WHERE id=:taskId")
