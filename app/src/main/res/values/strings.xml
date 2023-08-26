@@ -2,4 +2,8 @@
     <string name="app_name">To-Do Compose</string>
     <string name="add_button">Add button</string>
     <string name="tasks">Tasks</string>
+    <string name="search_tasks">Search Tasks</string>
+    <string name="sort_tasks">Sort Tasks</string>
+    <string name="delete_tasks">Delete Tasks</string>
+    <string name="delete_all">Delete All</string>
 </resources>
