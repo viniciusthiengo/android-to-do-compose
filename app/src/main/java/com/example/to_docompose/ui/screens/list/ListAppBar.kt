@@ -1,6 +1,5 @@
 package com.example.to_docompose.ui.screens.list
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,15 +22,43 @@ import com.example.to_docompose.R
 import com.example.to_docompose.components.PriorityItem
 import com.example.to_docompose.data.models.Priority
 import com.example.to_docompose.ui.theme.*
+import com.example.to_docompose.ui.viewmodels.SharedViewModel
+import com.example.to_docompose.util.SearchAppBarState
+import com.example.to_docompose.util.TrailingIconState
 
 @Composable
-fun ListAppBar(modifier: Modifier = Modifier) {
-    DefaultListAppBar(
-        onSearchClicked = { },
-        onSortClicked = {},
-        onDeleteClicked = {},
-        modifier = modifier
-    )
+fun ListAppBar(
+    sharedViewModel: SharedViewModel,
+    searchAppBarState: SearchAppBarState,
+    searchTextState: String,
+    modifier: Modifier = Modifier
+) {
+    when (searchAppBarState) {
+        SearchAppBarState.CLOSED -> {
+            DefaultListAppBar(
+                onSearchClicked = {
+                    sharedViewModel.searchAppBarState.value = SearchAppBarState.OPENED
+                },
+                onSortClicked = {},
+                onDeleteClicked = {},
+                modifier = modifier
+            )
+        }
+        else -> {
+            SearchAppBar(
+                text = searchTextState,
+                onTextChange = { newText ->
+                    sharedViewModel.searchTextState.value = newText
+                },
+                onCloseClicked = {
+                    sharedViewModel.searchAppBarState.value = SearchAppBarState.CLOSED
+                    sharedViewModel.searchTextState.value = ""
+                },
+                onSearchClicked = { /*TODO*/ }
+            )
+        }
+    }
+
 }
 
 @Composable
@@ -198,6 +225,10 @@ fun SearchAppBar(
     onSearchClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var trailingIconState by remember {
+        mutableStateOf(TrailingIconState.READY_TO_CLOSE)
+    }
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -208,7 +239,15 @@ fun SearchAppBar(
         TextField(
             modifier = Modifier.fillMaxWidth(),
             value = text,
-            onValueChange = { onTextChange(it) },
+            onValueChange = {
+                onTextChange(it)
+
+                trailingIconState = if (it.trim().isEmpty()) {
+                    TrailingIconState.READY_TO_CLOSE
+                } else {
+                    TrailingIconState.READY_TO_DELETE
+                }
+            },
             placeholder = {
                 Text(
                     text = stringResource(R.string.search),
@@ -235,7 +274,17 @@ fun SearchAppBar(
             },
             trailingIcon = {
                 IconButton(
-                    onClick = { onCloseClicked() }
+                    onClick = {
+                        when (trailingIconState) {
+                            TrailingIconState.READY_TO_DELETE -> {
+                                onTextChange("")
+                                trailingIconState = TrailingIconState.READY_TO_CLOSE
+                            }
+                            TrailingIconState.READY_TO_CLOSE -> {
+                                onCloseClicked()
+                            }
+                        }
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Close,
@@ -260,20 +309,20 @@ fun SearchAppBar(
 
 }
 
-@Composable
-@Preview(
-    name = "Light Mode",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
-@Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-fun ListAppBarPreview() {
-    ListAppBar()
-}
+//@Composable
+//@Preview(
+//    name = "Light Mode",
+//    showBackground = true,
+//    uiMode = Configuration.UI_MODE_NIGHT_NO
+//)
+//@Preview(
+//    name = "Dark Mode",
+//    showBackground = true,
+//    uiMode = Configuration.UI_MODE_NIGHT_YES
+//)
+//fun ListAppBarPreview() {
+//    ListAppBar()
+//}
 
 @Composable
 @Preview
@@ -292,5 +341,6 @@ fun SearchAppBarPreview() {
         text = "",
         onTextChange = {},
         onCloseClicked = { /*TODO*/ },
-        onSearchClicked = { /*TODO*/ })
+        onSearchClicked = { /*TODO*/ }
+    )
 }
