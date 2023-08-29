@@ -9,4 +9,6 @@
     <string name="search">Search</string>
     <string name="search_icon">Search Icon</string>
     <string name="close_icon">Close Icon</string>
+    <string name="sad_face_icon_description">Sad Face Icon</string>
+    <string name="no_tasks_found">No Tasks Found.</string>
 </resources>
