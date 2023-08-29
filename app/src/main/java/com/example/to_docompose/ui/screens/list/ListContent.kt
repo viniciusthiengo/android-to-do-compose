@@ -25,6 +25,24 @@ fun ListContent(
     navigateToTaskScreen: (taskId: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    if (tasks.isNotEmpty()) {
+        DisplayTasks(
+            tasks = tasks,
+            navigateToTaskScreen = navigateToTaskScreen,
+            modifier = modifier
+        )
+    } else {
+        EmptyContent(modifier = modifier)
+    }
+
+}
+
+@Composable
+fun DisplayTasks(
+    tasks: List<ToDoTask>,
+    navigateToTaskScreen: (taskId: Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
     LazyColumn(modifier = modifier) {
         items(
             items = tasks,
@@ -76,9 +94,7 @@ fun TaskItem(
                     contentAlignment = Alignment.TopEnd
                 ) {
                     Canvas(
-                        modifier = Modifier
-                            .width(PRIORITY_INDICATOR_SIZE)
-                            .height(PRIORITY_INDICATOR_SIZE),
+                        modifier = Modifier.size(PRIORITY_INDICATOR_SIZE),
                         onDraw = {
                             drawCircle(color = toDoTask.priority.color)
                         }
