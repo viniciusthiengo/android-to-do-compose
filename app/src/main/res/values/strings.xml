@@ -13,4 +13,7 @@
     <string name="no_tasks_found">No Tasks Found.</string>
     <string name="back_arrow">Back Arrow</string>
     <string name="add_task">Add Task</string>
+    <string name="delete_task">Delete Task</string>
+    <string name="update_task">Update Task</string>
+    <string name="drop_down_arrow_icon">Drop-Down Arrow Icon</string>
 </resources>
