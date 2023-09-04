@@ -72,7 +72,7 @@ class SharedViewModel @Inject constructor(
                 addTask()
             }
             Action.UPDATE -> {
-                //TODO()
+                updateTask()
             }
             Action.DELETE -> {
                 //TODO()
@@ -120,6 +120,19 @@ class SharedViewModel @Inject constructor(
     fun updateTitle(newTitle: String) {
         if (newTitle.length < MAX_TITLE_LENGTH) {
             title.value = newTitle
+        }
+    }
+
+    private fun updateTask() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val toDoTask = ToDoTask(
+                id = id.value,
+                title = title.value,
+                description = description.value,
+                priority = priority.value
+            )
+
+            repository.updateTask(toDoTask = toDoTask)
         }
     }
 
