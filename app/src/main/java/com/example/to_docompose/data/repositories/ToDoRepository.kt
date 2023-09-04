@@ -33,5 +33,5 @@ class ToDoRepository @Inject constructor(private val toDoDao: ToDoDao) {
     }
 
     fun searchDatabase(query: String): Flow<List<ToDoTask>> =
-        toDoDao.searchDatabase(query = query)
+        toDoDao.searchDatabase(query = "%$query%")
 }
