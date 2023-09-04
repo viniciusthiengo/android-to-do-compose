@@ -18,5 +18,6 @@
     <string name="drop_down_arrow_icon">Drop-Down Arrow Icon</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
+    <string name="undo">UNDO</string>
 </resources>
