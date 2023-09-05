@@ -23,6 +23,7 @@ import com.example.to_docompose.components.PriorityItem
 import com.example.to_docompose.data.models.Priority
 import com.example.to_docompose.ui.theme.*
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
+import com.example.to_docompose.util.Action
 import com.example.to_docompose.util.SearchAppBarState
 import com.example.to_docompose.util.TrailingIconState
 
@@ -40,7 +41,10 @@ fun ListAppBar(
                     sharedViewModel.searchAppBarState.value = SearchAppBarState.OPENED
                 },
                 onSortClicked = {},
-                onDeleteClicked = {},
+                onDeleteAllClicked = {
+                    sharedViewModel.action.value = Action.DELETE_ALL
+                    //sharedViewModel.handlerDatabaseActions(action = Action.DELETE_ALL)
+                },
                 modifier = modifier
             )
         }
@@ -67,7 +71,7 @@ fun ListAppBar(
 fun DefaultListAppBar(
     onSearchClicked: () -> Unit,
     onSortClicked: (Priority) -> Unit,
-    onDeleteClicked: () -> Unit,
+    onDeleteAllClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TopAppBar(
@@ -81,7 +85,7 @@ fun DefaultListAppBar(
             ListAppBarActions(
                 onSearchClicked = onSearchClicked,
                 onSortClicked = onSortClicked,
-                onDeleteClicked = onDeleteClicked
+                onDeleteAllClicked = onDeleteAllClicked
             )
         },
         backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor,
@@ -93,7 +97,7 @@ fun DefaultListAppBar(
 fun ListAppBarActions(
     onSearchClicked: () -> Unit,
     onSortClicked: (Priority) -> Unit,
-    onDeleteClicked: () -> Unit,
+    onDeleteAllClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     SearchAction(
@@ -105,7 +109,7 @@ fun ListAppBarActions(
         modifier = modifier
     )
     DeleteAction(
-        onDeleteClicked = onDeleteClicked,
+        onDeleteAllClicked = onDeleteAllClicked,
         modifier = modifier
     )
 }
@@ -182,7 +186,7 @@ fun SortAction(
 
 @Composable
 fun DeleteAction(
-    onDeleteClicked: () -> Unit,
+    onDeleteAllClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember {
@@ -206,7 +210,7 @@ fun DeleteAction(
             DropdownMenuItem(
                 onClick = {
                     expanded = false
-                    onDeleteClicked()
+                    onDeleteAllClicked()
                 }
             ) {
                 Text(
@@ -332,7 +336,7 @@ fun DefaultListAppBarPreview() {
     DefaultListAppBar(
         onSearchClicked = {},
         onSortClicked = {},
-        onDeleteClicked = {}
+        onDeleteAllClicked = {}
     )
 }
 
