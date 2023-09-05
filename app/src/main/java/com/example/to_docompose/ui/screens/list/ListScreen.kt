@@ -106,7 +106,7 @@ fun DisplaySnackBar(
                     val snackBarResult = scaffoldState
                         .snackbarHostState
                         .showSnackbar(
-                            message = "${action.name}: $taskTitle",
+                            message = getMessage(action = action, taskTitle = taskTitle),
                             actionLabel = actionLabel
                         )
 
@@ -126,6 +126,15 @@ private fun getActionLabel(action: Action): Int =
         R.string.undo
     } else {
         R.string.ok
+    }
+
+private fun getMessage(
+    action: Action,
+    taskTitle: String
+): String =
+    when (action) {
+        Action.DELETE_ALL -> "All tasks removed."
+        else -> "${action.name}: $taskTitle"
     }
 
 private fun undoDeletedTask(
