@@ -20,4 +20,8 @@
     <string name="description">Description</string>
     <string name="ok">OK</string>
     <string name="undo">UNDO</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="delete_task_template">Remove \'%1$s\'?</string>
+    <string name="delete_task_confirmation_template">Are you sure you want to remove \'%1$s\' task?</string>
 </resources>
