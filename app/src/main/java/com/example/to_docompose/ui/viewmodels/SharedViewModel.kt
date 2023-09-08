@@ -14,8 +14,7 @@ import com.example.to_docompose.util.RequestState
 import com.example.to_docompose.util.SearchAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -44,6 +43,25 @@ class SharedViewModel @Inject constructor(
     val priority: MutableState<Priority> = mutableStateOf(Priority.LOW)
 
     val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
+
+    private val _sortState = MutableStateFlow<RequestState<Priority>>(RequestState.Idle)
+    val sortState: StateFlow<RequestState<Priority>> = _sortState
+
+    val lowPriorityTasks: StateFlow<List<ToDoTask>> = repository
+        .sortByLowPriority
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
+        )
+
+    val highPriorityTasks: StateFlow<List<ToDoTask>> = repository
+        .sortByHighPriority
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
+        )
 
     fun getAllTasks() {
         _allTasks.value = RequestState.Loading
@@ -181,5 +199,28 @@ class SharedViewModel @Inject constructor(
 
     fun validateFields(): Boolean {
         return title.value.isNotEmpty() && description.value.isNotEmpty()
+    }
+
+    fun persistSortState(priority: Priority) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.persistSortState(priority = priority)
+        }
+    }
+
+    fun readSortState() {
+        _sortState.value = RequestState.Loading
+
+        try {
+            viewModelScope.launch {
+                dataStoreRepository
+                    .readSortState
+                    .map { Priority.valueOf(value = it) }
+                    .collect { priority ->
+                        _sortState.value = RequestState.Success(data = priority)
+                    }
+            }
+        } catch (e: Exception) {
+            _sortState.value = RequestState.Error(error = e)
+        }
     }
 }
