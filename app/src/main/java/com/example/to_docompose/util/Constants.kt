@@ -4,6 +4,9 @@ object Constants {
     const val DATABASE_NAME = "todo_database"
     const val DATABASE_TABLE = "todo_table"
 
+    const val SPLASH_SCREEN = "splash"
+    const val SPLASH_SCREEN_DELAY = 2000L
+
     const val LIST_ARGUMENT_KEY = "action"
     const val LIST_SCREEN = "list/{$LIST_ARGUMENT_KEY}"
 

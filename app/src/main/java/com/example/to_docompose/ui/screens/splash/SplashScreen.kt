@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -18,9 +19,22 @@ import com.example.to_docompose.R
 import com.example.to_docompose.ui.theme.LOGO_HEIGHT
 import com.example.to_docompose.ui.theme.ToDoComposeTheme
 import com.example.to_docompose.ui.theme.splashScreenBackground
+import com.example.to_docompose.util.Constants.SPLASH_SCREEN_DELAY
+import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(modifier: Modifier = Modifier) {
+fun SplashScreen(
+    navigateToTaskScreen: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LaunchedEffect(
+        key1 = true,
+        block = {
+            delay(timeMillis = SPLASH_SCREEN_DELAY)
+            navigateToTaskScreen()
+        }
+    )
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -47,7 +61,7 @@ private fun getLogo(): Int =
 @Preview
 fun SplashScreenPreview() {
     ToDoComposeTheme {
-        SplashScreen()
+        SplashScreen(navigateToTaskScreen = {})
     }
 }
 
@@ -58,6 +72,6 @@ fun SplashScreenPreview() {
 )
 fun SplashScreenPreviewDark() {
     ToDoComposeTheme {
-        SplashScreen()
+        SplashScreen(navigateToTaskScreen = {})
     }
 }
