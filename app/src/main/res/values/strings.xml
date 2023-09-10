@@ -26,4 +26,5 @@
     <string name="delete_task_confirmation_template">Are you sure you want to remove \'%1$s\' task?</string>
     <string name="delete_all_tasks">Remove All Tasks?</string>
     <string name="delete_all_tasks_confirmation">Are you sure you want to remove all tasks? There is no going back after this action.</string>
+    <string name="delete_icon">Delete Icon</string>
 </resources>
