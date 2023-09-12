@@ -29,9 +29,27 @@ interface ToDoDao {
     @Query(value = "SELECT * FROM $DATABASE_TABLE WHERE title LIKE :query OR description LIKE :query")
     fun searchDatabase(query: String): Flow<List<ToDoTask>>
 
-    @Query(value = "SELECT * FROM $DATABASE_TABLE ORDER BY CASE WHEN priority LIKE 'L%' THEN 1 WHEN priority LIKE 'M%' THEN 2 WHEN priority LIKE 'H%' THEN 3 END")
+    @Query(
+        value = """
+            SELECT * FROM $DATABASE_TABLE ORDER BY 
+                CASE 
+                    WHEN priority LIKE 'L%' THEN 1 
+                    WHEN priority LIKE 'M%' THEN 2 
+                    WHEN priority LIKE 'H%' THEN 3 
+                END        
+        """
+    )
     fun sortByLowPriority(): Flow<List<ToDoTask>>
 
-    @Query(value = "SELECT * FROM $DATABASE_TABLE ORDER BY CASE WHEN priority LIKE 'H%' THEN 1 WHEN priority LIKE 'M%' THEN 2 WHEN priority LIKE 'L%' THEN 3 END")
+    @Query(
+        value = """
+            SELECT * FROM $DATABASE_TABLE ORDER BY 
+                CASE 
+                    WHEN priority LIKE 'H%' THEN 1 
+                    WHEN priority LIKE 'M%' THEN 2 
+                    WHEN priority LIKE 'L%' THEN 3 
+                END
+    """
+    )
     fun sortByHighPriority(): Flow<List<ToDoTask>>
 }
