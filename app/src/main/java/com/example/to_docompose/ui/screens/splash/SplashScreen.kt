@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.to_docompose.R
 import com.example.to_docompose.ui.theme.LOGO_HEIGHT
@@ -57,6 +58,19 @@ fun SplashScreen(
         }
     )
 
+    Splash(
+        offsetState = offsetState,
+        alphaState = alphaState,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun Splash(
+    offsetState: Dp,
+    alphaState: Float,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -86,7 +100,10 @@ private fun getLogo(): Int =
 @Preview
 fun SplashScreenPreview() {
     ToDoComposeTheme {
-        SplashScreen(navigateToTaskScreen = {})
+        Splash(
+            offsetState = 0.dp,
+            alphaState = 1f,
+        )
     }
 }
 
@@ -97,6 +114,9 @@ fun SplashScreenPreview() {
 )
 fun SplashScreenPreviewDark() {
     ToDoComposeTheme {
-        SplashScreen(navigateToTaskScreen = {})
+        Splash(
+            offsetState = 0.dp,
+            alphaState = 1f,
+        )
     }
 }
