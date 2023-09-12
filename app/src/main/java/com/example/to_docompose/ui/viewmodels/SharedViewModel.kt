@@ -63,7 +63,12 @@ class SharedViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    fun getAllTasks() {
+    init {
+        getAllTasks()
+        readSortState()
+    }
+
+    private fun getAllTasks() {
         _allTasks.value = RequestState.Loading
 
         try {
@@ -205,7 +210,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    fun readSortState() {
+    private fun readSortState() {
         _sortState.value = RequestState.Loading
 
         try {

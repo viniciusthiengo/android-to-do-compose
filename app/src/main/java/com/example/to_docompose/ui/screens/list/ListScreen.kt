@@ -20,14 +20,6 @@ fun ListScreen(
     sharedViewModel: SharedViewModel
 ) {
     LaunchedEffect(
-        key1 = true,
-        block = {
-            sharedViewModel.getAllTasks()
-            sharedViewModel.readSortState()
-        }
-    )
-
-    LaunchedEffect(
         key1 = action,
         block = {
             sharedViewModel.handlerDatabaseActions(action)
