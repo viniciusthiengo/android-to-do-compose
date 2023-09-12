@@ -168,32 +168,19 @@ fun SortAction(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            DropdownMenuItem(
-                onClick = {
-                    expanded = false
-                    onSortClicked(Priority.LOW)
+            Priority
+                .values()
+                .filter { it != Priority.MEDIUM }
+                .forEach { priority ->
+                    DropdownMenuItem(
+                        onClick = {
+                            expanded = false
+                            onSortClicked(priority)
+                        }
+                    ) {
+                        PriorityItem(priority = priority)
+                    }
                 }
-            ) {
-                PriorityItem(priority = Priority.LOW)
-            }
-
-            DropdownMenuItem(
-                onClick = {
-                    expanded = false
-                    onSortClicked(Priority.HIGH)
-                }
-            ) {
-                PriorityItem(priority = Priority.HIGH)
-            }
-
-            DropdownMenuItem(
-                onClick = {
-                    expanded = false
-                    onSortClicked(Priority.NONE)
-                }
-            ) {
-                PriorityItem(priority = Priority.NONE)
-            }
         }
     }
 }
@@ -327,21 +314,6 @@ fun SearchAppBar(
         )
     }
 }
-
-//@Composable
-//@Preview(
-//    name = "Light Mode",
-//    showBackground = true,
-//    uiMode = Configuration.UI_MODE_NIGHT_NO
-//)
-//@Preview(
-//    name = "Dark Mode",
-//    showBackground = true,
-//    uiMode = Configuration.UI_MODE_NIGHT_YES
-//)
-//fun ListAppBarPreview() {
-//    ListAppBar()
-//}
 
 @Composable
 @Preview
