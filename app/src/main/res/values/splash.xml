@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.App.MySplash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#6200EE</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_light</item>
+        <item name="postSplashScreenTheme">@style/Theme.ToDoCompose</item>
+    </style>
+</resources>
