@@ -1,5 +1,6 @@
 package com.example.to_docompose.ui.screens.list
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -9,8 +10,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +47,9 @@ fun ListAppBar(
     searchAppBarState: SearchAppBarState,
     searchTextState: String,
 ) {
+    val themeState by sharedViewModel.themeState.collectAsState()
+    val useDarkTheme = themeState ?: isSystemInDarkTheme()
+
     when (searchAppBarState) {
         SearchAppBarState.CLOSED -> {
             DefaultListAppBar(
@@ -54,6 +61,10 @@ fun ListAppBar(
                 },
                 onDeleteAllConfirmed = {
                     sharedViewModel.updateAction(newAction = Action.DELETE_ALL)
+                },
+                darkTheme = useDarkTheme,
+                onThemeUpdated = {
+                    sharedViewModel.persistThemeState(darkTheme = it)
                 }
             )
         }
@@ -81,6 +92,8 @@ fun DefaultListAppBar(
     onSearchClicked: () -> Unit,
     onSortClicked: (Priority) -> Unit,
     onDeleteAllConfirmed: () -> Unit,
+    darkTheme: Boolean,
+    onThemeUpdated: (Boolean) -> Unit,
 ) {
     Surface(
         color = MaterialTheme.colors.topAppBarBackgroundColor,
@@ -98,7 +111,9 @@ fun DefaultListAppBar(
                 ListAppBarActions(
                     onSearchClicked = onSearchClicked,
                     onSortClicked = onSortClicked,
-                    onDeleteAllConfirmed = onDeleteAllConfirmed
+                    onDeleteAllConfirmed = onDeleteAllConfirmed,
+                    darkTheme = darkTheme,
+                    onThemeUpdated = onThemeUpdated
                 )
             },
             backgroundColor = Color.Transparent,
@@ -113,6 +128,8 @@ fun ListAppBarActions(
     onSearchClicked: () -> Unit,
     onSortClicked: (Priority) -> Unit,
     onDeleteAllConfirmed: () -> Unit,
+    darkTheme: Boolean,
+    onThemeUpdated: (Boolean) -> Unit,
 ) {
     var openDialog by remember {
         mutableStateOf(false)
@@ -134,6 +151,10 @@ fun ListAppBarActions(
     )
     DeleteAction(
         onDeleteAllConfirmed = { openDialog = true }
+    )
+    ThemeToggleAction(
+        darkTheme = darkTheme,
+        onThemeUpdated = onThemeUpdated
     )
 }
 
@@ -224,6 +245,24 @@ fun DeleteAction(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun ThemeToggleAction(
+    darkTheme: Boolean,
+    onThemeUpdated: (Boolean) -> Unit
+) {
+    IconButton(
+        onClick = { onThemeUpdated(!darkTheme) }
+    ) {
+        Icon(
+            imageVector = if (darkTheme) Icons.Filled.LightMode else Icons.Filled.DarkMode,
+            contentDescription = stringResource(
+                if (darkTheme) R.string.switch_to_light_mode else R.string.switch_to_dark_mode
+            ),
+            tint = MaterialTheme.colors.topAppBarContentColor
+        )
     }
 }
 
@@ -324,7 +363,9 @@ fun DefaultListAppBarPreview() {
     DefaultListAppBar(
         onSearchClicked = {},
         onSortClicked = {},
-        onDeleteAllConfirmed = {}
+        onDeleteAllConfirmed = {},
+        darkTheme = false,
+        onThemeUpdated = {}
     )
 }
 

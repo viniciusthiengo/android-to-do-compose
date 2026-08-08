@@ -59,6 +59,9 @@ class SharedViewModel @Inject constructor(
     private val _sortState = MutableStateFlow<RequestState<Priority>>(RequestState.Idle)
     val sortState: StateFlow<RequestState<Priority>> = _sortState
 
+    private val _themeState = MutableStateFlow<Boolean?>(null)
+    val themeState: StateFlow<Boolean?> = _themeState
+
     val lowPriorityTasks: StateFlow<List<ToDoTask>> = repository
         .sortByLowPriority
         .stateIn(
@@ -78,6 +81,7 @@ class SharedViewModel @Inject constructor(
     init {
         getAllTasks()
         readSortState()
+        readThemeState()
     }
 
     private fun getAllTasks() {
@@ -236,6 +240,22 @@ class SharedViewModel @Inject constructor(
             }
         } catch (e: Exception) {
             _sortState.value = RequestState.Error(error = e)
+        }
+    }
+
+    fun persistThemeState(darkTheme: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.persistThemeState(darkTheme = darkTheme)
+        }
+    }
+
+    private fun readThemeState() {
+        viewModelScope.launch {
+            dataStoreRepository
+                .readThemeState
+                .collect { darkTheme ->
+                    _themeState.value = darkTheme
+                }
         }
     }
 

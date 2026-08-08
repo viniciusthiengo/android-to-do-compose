@@ -28,4 +28,6 @@
     <string name="delete_all_tasks_confirmation">Are you sure you want to remove all tasks? There is no going back after this action.</string>
     <string name="delete_icon">Delete Icon</string>
     <string name="todo_logo">ToDo Logo</string>
+    <string name="switch_to_dark_mode">Switch to Dark Mode</string>
+    <string name="switch_to_light_mode">Switch to Light Mode</string>
 </resources>

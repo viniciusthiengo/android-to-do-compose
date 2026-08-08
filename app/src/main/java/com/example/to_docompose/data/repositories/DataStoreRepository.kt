@@ -3,12 +3,14 @@ package com.example.to_docompose.data.repositories
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.to_docompose.data.models.Priority
 import com.example.to_docompose.util.Constants.PREFERENCE_KEY
+import com.example.to_docompose.util.Constants.PREFERENCE_KEY_THEME
 import com.example.to_docompose.util.Constants.PREFERENCE_NAME
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
@@ -27,6 +29,7 @@ class DataStoreRepository @Inject constructor(
 
     private object PreferenceKeys {
         val sortKey = stringPreferencesKey(name = PREFERENCE_KEY)
+        val themeKey = booleanPreferencesKey(name = PREFERENCE_KEY_THEME)
     }
 
     private val dataStore = context.dataStore
@@ -48,5 +51,24 @@ class DataStoreRepository @Inject constructor(
         }
         .map { preferences ->
             preferences[PreferenceKeys.sortKey] ?: Priority.NONE.name
+        }
+
+    suspend fun persistThemeState(darkTheme: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.themeKey] = darkTheme
+        }
+    }
+
+    val readThemeState: Flow<Boolean?> = dataStore
+        .data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[PreferenceKeys.themeKey]
         }
 }
