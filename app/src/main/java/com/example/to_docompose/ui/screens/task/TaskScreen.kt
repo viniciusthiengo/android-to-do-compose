@@ -3,8 +3,10 @@ package com.example.to_docompose.ui.screens.task
 import android.content.Context
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.example.to_docompose.data.models.Priority
 import com.example.to_docompose.data.models.ToDoTask
@@ -43,7 +45,7 @@ fun TaskScreen(
                 }
             )
         },
-        content = {
+        content = { paddingValues ->
             TaskContent(
                 title = title,
                 onTitleChange = {
@@ -56,7 +58,8 @@ fun TaskScreen(
                 priority = priority,
                 onPrioritySelected = {
                     sharedViewModel.updatePriority(newPriority = it)
-                }
+                },
+                modifier = Modifier.padding(paddingValues)
             )
         }
     )

@@ -3,13 +3,18 @@ package com.example.to_docompose.ui.screens.list
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -18,11 +23,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.to_docompose.R
 import com.example.to_docompose.components.DisplayAlertDialog
 import com.example.to_docompose.components.PriorityItem
 import com.example.to_docompose.data.models.Priority
-import com.example.to_docompose.ui.theme.*
+import com.example.to_docompose.ui.theme.LARGE_PADDING
+import com.example.to_docompose.ui.theme.TOP_APP_BAR_HEIGHT
+import com.example.to_docompose.ui.theme.topAppBarBackgroundColor
+import com.example.to_docompose.ui.theme.topAppBarContentColor
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
 import com.example.to_docompose.util.Action
 import com.example.to_docompose.util.SearchAppBarState
@@ -33,7 +42,6 @@ fun ListAppBar(
     sharedViewModel: SharedViewModel,
     searchAppBarState: SearchAppBarState,
     searchTextState: String,
-    modifier: Modifier = Modifier
 ) {
     when (searchAppBarState) {
         SearchAppBarState.CLOSED -> {
@@ -46,8 +54,7 @@ fun ListAppBar(
                 },
                 onDeleteAllConfirmed = {
                     sharedViewModel.updateAction(newAction = Action.DELETE_ALL)
-                },
-                modifier = modifier
+                }
             )
         }
         else -> {
@@ -74,25 +81,31 @@ fun DefaultListAppBar(
     onSearchClicked: () -> Unit,
     onSortClicked: (Priority) -> Unit,
     onDeleteAllConfirmed: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
-    TopAppBar(
-        title = {
-            Text(
-                text = stringResource(R.string.tasks),
-                color = MaterialTheme.colors.topAppBarContentColor
-            )
-        },
-        actions = {
-            ListAppBarActions(
-                onSearchClicked = onSearchClicked,
-                onSortClicked = onSortClicked,
-                onDeleteAllConfirmed = onDeleteAllConfirmed
-            )
-        },
-        backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor,
-        modifier = modifier
-    )
+    Surface(
+        color = MaterialTheme.colors.topAppBarBackgroundColor,
+        elevation = AppBarDefaults.TopAppBarElevation,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        TopAppBar(
+            title = {
+                Text(
+                    text = stringResource(R.string.tasks),
+                    color = MaterialTheme.colors.topAppBarContentColor
+                )
+            },
+            actions = {
+                ListAppBarActions(
+                    onSearchClicked = onSearchClicked,
+                    onSortClicked = onSortClicked,
+                    onDeleteAllConfirmed = onDeleteAllConfirmed
+                )
+            },
+            backgroundColor = Color.Transparent,
+            elevation = 0.dp,
+            modifier = Modifier.statusBarsPadding()
+        )
+    }
 }
 
 @Composable
@@ -100,7 +113,6 @@ fun ListAppBarActions(
     onSearchClicked: () -> Unit,
     onSortClicked: (Priority) -> Unit,
     onDeleteAllConfirmed: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     var openDialog by remember {
         mutableStateOf(false)
@@ -115,27 +127,22 @@ fun ListAppBarActions(
     )
 
     SearchAction(
-        onSearchClicked = onSearchClicked,
-        modifier = modifier
+        onSearchClicked = onSearchClicked
     )
     SortAction(
-        onSortClicked = onSortClicked,
-        modifier = modifier
+        onSortClicked = onSortClicked
     )
     DeleteAction(
-        onDeleteAllConfirmed = { openDialog = true },
-        modifier = modifier
+        onDeleteAllConfirmed = { openDialog = true }
     )
 }
 
 @Composable
 fun SearchAction(
-    onSearchClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    onSearchClicked: () -> Unit
 ) {
     IconButton(
-        onClick = { onSearchClicked() },
-        modifier = modifier
+        onClick = { onSearchClicked() }
     ) {
         Icon(
             imageVector = Icons.Filled.Search,
@@ -147,16 +154,14 @@ fun SearchAction(
 
 @Composable
 fun SortAction(
-    onSortClicked: (Priority) -> Unit,
-    modifier: Modifier = Modifier
+    onSortClicked: (Priority) -> Unit
 ) {
     var expanded by remember {
         mutableStateOf(value = false)
     }
 
     IconButton(
-        onClick = { expanded = true },
-        modifier = modifier
+        onClick = { expanded = true }
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_filter_list),
@@ -187,16 +192,14 @@ fun SortAction(
 
 @Composable
 fun DeleteAction(
-    onDeleteAllConfirmed: () -> Unit,
-    modifier: Modifier = Modifier
+    onDeleteAllConfirmed: () -> Unit
 ) {
     var expanded by remember {
         mutableStateOf(value = false)
     }
 
     IconButton(
-        onClick = { expanded = true },
-        modifier = modifier
+        onClick = { expanded = true }
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_vertical_menu),
@@ -216,7 +219,7 @@ fun DeleteAction(
             ) {
                 Text(
                     text = stringResource(R.string.delete_all),
-                    style = Typography.subtitle2,
+                    style = MaterialTheme.typography.subtitle2,
                     modifier = Modifier.padding(start = LARGE_PADDING)
                 )
             }
@@ -230,21 +233,21 @@ fun SearchAppBar(
     onTextChange: (String) -> Unit,
     onCloseClicked: () -> Unit,
     onSearchClicked: (String) -> Unit,
-    modifier: Modifier = Modifier
 ) {
     var trailingIconState by remember {
         mutableStateOf(TrailingIconState.READY_TO_CLOSE)
     }
 
     Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(TOP_APP_BAR_HEIGHT),
+        modifier = Modifier.fillMaxWidth(),
         elevation = AppBarDefaults.TopAppBarElevation,
         color = MaterialTheme.colors.topAppBarBackgroundColor
     ) {
         TextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .statusBarsPadding()
+                .fillMaxWidth()
+                .height(TOP_APP_BAR_HEIGHT),
             value = text,
             onValueChange = {
                 onTextChange(it)
