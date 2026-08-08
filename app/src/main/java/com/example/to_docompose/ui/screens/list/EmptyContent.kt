@@ -39,7 +39,7 @@ fun EmptyContent(modifier: Modifier = Modifier) {
             text = stringResource(R.string.no_tasks_found),
             color = MediumGray,
             fontWeight = FontWeight.Bold,
-            fontSize = MaterialTheme.typography.h6.fontSize
+            style = MaterialTheme.typography.h6
         )
     }
 }

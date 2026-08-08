@@ -1,13 +1,19 @@
 package com.example.to_docompose.ui.screens.list
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.example.to_docompose.R
-import com.example.to_docompose.ui.theme.fabBackgroundColor
 import com.example.to_docompose.ui.viewmodels.SharedViewModel
 import com.example.to_docompose.util.Action
 import com.example.to_docompose.util.SearchAppBarState
@@ -59,7 +65,7 @@ fun ListScreen(
                 searchTextState = searchTextState
             )
         },
-        content = {
+        content = { padding ->
             ListContent(
                 allTasks = allTasks,
                 lowPriorityTasks = lowPriorityTasks,
@@ -72,7 +78,8 @@ fun ListScreen(
                     sharedViewModel.updateTaskFields(selectedTask = task)
                     scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                 },
-                navigateToTaskScreen = navigateToTaskScreen
+                navigateToTaskScreen = navigateToTaskScreen,
+                modifier = Modifier.padding(padding)
             )
         },
         floatingActionButton = {
@@ -87,7 +94,7 @@ fun ListFab(onFabClicked: (taskId: Int) -> Unit) {
         onClick = {
             onFabClicked(-1)
         },
-        backgroundColor = MaterialTheme.colors.fabBackgroundColor
+        backgroundColor = MaterialTheme.colors.primary
     ) {
         Icon(
             imageVector = Icons.Filled.Add,
@@ -113,8 +120,7 @@ fun DisplaySnackBar(
         block = {
             if (action != Action.NO_ACTION) {
                 scope.launch {
-                    val snackBarResult = scaffoldState
-                        .snackbarHostState
+                    val snackBarResult = scaffoldState.snackbarHostState
                         .showSnackbar(
                             message = getMessage(action = action, taskTitle = taskTitle),
                             actionLabel = actionLabel
