@@ -9,6 +9,8 @@
 /.idea/assetWizardSettings.xml
 /.idea/deploymentTargetSelector.xml
 /.idea/migrations.xml
+/.idea/deviceManager.xml
+/.idea/runConfigurations.xml
 .DS_Store
 /build
 /captures
