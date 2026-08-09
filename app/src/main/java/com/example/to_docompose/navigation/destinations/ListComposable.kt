@@ -24,6 +24,8 @@ fun NavGraphBuilder.listComposable(
         route = LIST_SCREEN,
         arguments = listOf(navArgument(LIST_ARGUMENT_KEY) {
             type = NavType.StringType
+            nullable = true
+            defaultValue = null
         })
     ) { navBackStackEntry ->
         val action = navBackStackEntry
